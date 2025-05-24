@@ -93,7 +93,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 16),
                       Expanded(
-                        child: ListView.builder(
+                        child: ListView.separated(
+                          separatorBuilder: (context, index) => SizedBox(height: 15,),
                           shrinkWrap: true,
                           itemCount: state.products.length,
                           itemBuilder: (context, index) => ProductCard(

@@ -11,7 +11,7 @@ abstract class ProductRemoteDataSource {
 
   // Cart operations
   Future<CartModel> getCart(int userId);
-  Future<CartModel> addToCart(int userId, ProductEntity product);
+  Future<CartModel> addToCart(CartModel cart, ProductEntity product);
   Future<CartModel> removeFromCart(int userId, int productId);
   Future<CartModel> clearCart(int userId);
 

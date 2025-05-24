@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:ecommerce/core/error/failures.dart';
 import 'package:ecommerce/data/datasources/local/product_local_datasource.dart';
 import 'package:ecommerce/data/datasources/remote/product_remote_data_source.dart';
+import 'package:ecommerce/data/models/cart_model.dart';
 import 'package:ecommerce/domain/entities/cart.dart';
 import 'package:ecommerce/domain/entities/product.dart';
 import 'package:ecommerce/domain/repositories/cart_repository.dart';
@@ -21,6 +22,7 @@ class CartRepositoryImpl implements CartRepository {
         return Left(ValidationFailure(message: 'User ID must be greater than 0'));
       }
       final cart = await remoteDataSource.getCart(userId);
+      await localDatasource.storeCart(cart);
       return Right(cart);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));
@@ -36,7 +38,9 @@ class CartRepositoryImpl implements CartRepository {
       if (product.id <= 0) {
         return Left(ValidationFailure(message: 'Product ID must be greater than 0'));
       }
-      final cart = await remoteDataSource.addToCart(userId, product);
+       CartModel? recentCart = await localDatasource.getRecentCart();
+      recentCart ??= await remoteDataSource.getCart(userId);
+      final cart = await remoteDataSource.addToCart(recentCart, product);
       return Right(cart);
     } catch (e) {
       return Left(ServerFailure(message: e.toString()));

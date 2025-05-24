@@ -43,8 +43,8 @@ class _CartPageState extends State<CartPage> {
         ),
         toolbarHeight: 80,
         leadingWidth: 200,
-        actions: [
-          const Padding(
+        actions: const [
+          Padding(
             padding: EdgeInsets.only(right: 12.0),
             child: LogOutButton(),
           ),

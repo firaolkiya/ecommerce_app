@@ -92,33 +92,51 @@ Future<CartModel> getCart(int userId) async {
     throw Exception('Failed to get cart: $e');
   }
 }
+@override
+Future<CartModel> addToCart(CartModel cart, ProductEntity product) async {
+  try {
+    final cartId = cart.id;
+    final userId = cart.userId;
 
-  // @override
-  // Future<CartModel> addToCart(int userId, ProductEntity product) async {
-  //   try {
-  //     final response = await dio.post(
-  //       '/carts/add',
-  //       data: {
-  //         'userId': userId,
-  //         'product': {
-  //           'id': product.id,
-  //           'title': product.title,
-  //           'price': product.price,
-  //           'description': product.description,
-  //           'category': product.category,
-  //           'image': product.image,
-  //           'rating': {
-  //             'rate': product.rating.rate,
-  //             'count': product.rating.count,
-  //           },
-  //         },
-  //       },
-  //     );
-  //     return CartModel.fromJson(response.data);
-  //   } catch (e) {
-  //     throw Exception('Failed to add to cart');
-  //   }
-  // }
+    // Clone and update the cart's products
+    final updatedProducts = [...cart.items];
+
+    bool found = false;
+    for (var item in updatedProducts) {
+      if (item.product.id == product.id) {
+        item.quantity += 1;
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      cart.items.add(CartItem(product: product, quantity: 1));
+      updatedProducts.add(CartItem(product: product, quantity: 1));
+    }
+
+    // Send PUT request to update the cart
+    final response = await dio.put('https://fakestoreapi.com/carts/$cartId', data: {
+      'id': cartId,
+      'userId': userId,
+      'products': updatedProducts
+          .map((e) => {'productId': e.product.id, 'quantity': e.quantity})
+          .toList(),
+    });
+
+    if(response.statusCode!=200){
+      throw Exception('Failed to add to cart');
+    }
+
+    
+    return cart;
+
+   
+  } catch (e) {
+    throw Exception('Failed to add to cart');
+  }
+}
+
 
   // @override
   // Future<CartModel> removeFromCart(int userId, int productId) async {
@@ -173,11 +191,7 @@ Future<UserModel> login(String username, String password) async {
   }
 }
 
-  @override
-  Future<CartModel> addToCart(int userId, ProductEntity product) {
-    // TODO: implement addToCart
-    throw UnimplementedError();
-  }
+  
 
   @override
   Future<CartModel> clearCart(int userId) {
