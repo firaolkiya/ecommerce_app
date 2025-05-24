@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/wishlist/wishlist_bloc.dart';
+import '../bloc/wishlist/wishlist_event.dart';
+import '../bloc/wishlist/wishlist_state.dart';
 import '../widgets/app_background.dart';
 import '../widgets/logout_button.dart';
-import '../widgets/bottom_navigation.dart';
 import '../widgets/wishlist/wishlist_item.dart';
 
 class WishlistPage extends StatelessWidget {
@@ -17,44 +20,61 @@ class WishlistPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Wishlist',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const LogOutButton(),
+                    LogOutButton(),
                   ],
                 ),
                 const SizedBox(height: 24),
                 Expanded(
-                  child: ListView(
-                    children: const [
-                      WishlistItem(
-                        imageUrl: 'assets/images/Book 01.png',
-                        title: '"Awaken, My Love!"',
-                        price: '\$19.99',
-                      ),
-                      SizedBox(height: 16),
-                      WishlistItem(
-                        imageUrl: 'assets/images/Book 2.png',
-                        title: 'Dark Lane Demo Tapes',
-                        price: '\$32.99',
-                      ),
-                      SizedBox(height: 16),
-                      WishlistItem(
-                        imageUrl: 'assets/images/Book 3.png',
-                        title: '4 Your Eyez Only',
-                        price: '\$28.99',
-                      ),
-                    ],
+                  child: BlocBuilder<WishlistBloc, WishlistState>(
+                    builder: (context, state) {
+                      if (state is WishlistLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is WishlistError) {
+                        return Center(child: Text(state.message));
+                      } else if (state is WishlistLoaded) {
+                        if (state.products.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'Your wishlist is empty',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          );
+                        }
+                        return ListView.separated(
+                          itemCount: state.products.length,
+                          separatorBuilder: (context, index) => const SizedBox(height: 16),
+                          itemBuilder: (context, index) {
+                            final product = state.products[index];
+                            return WishlistItem(
+                              imageUrl: product.imageUrl,
+                              title: product.name,
+                              price: '\$${product.price.toStringAsFixed(2)}',
+                              onRemove: () {
+                                context.read<WishlistBloc>().add(
+                                  RemoveFromWishlistEvent(product.id),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ),
-               
               ],
             ),
           ),

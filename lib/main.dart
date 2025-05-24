@@ -7,6 +7,8 @@ import 'package:ecommerce/presentation/bloc/product/product_bloc.dart';
 import 'package:ecommerce/presentation/bloc/product/product_event.dart';
 import 'package:ecommerce/presentation/bloc/cart/cart_bloc.dart';
 import 'package:ecommerce/presentation/screens/home_page.dart';
+import 'package:ecommerce/presentation/bloc/wishlist/wishlist_bloc.dart';
+import 'package:ecommerce/presentation/bloc/wishlist/wishlist_event.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
         ), 
         BlocProvider(
           create: (_) => di.sl<AuthBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.sl<WishlistBloc>()..add(GetWishlistEvent()),
         ),
       ],
       child: MaterialApp(

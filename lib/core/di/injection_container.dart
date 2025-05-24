@@ -1,9 +1,12 @@
 import 'package:ecommerce/data/datasources/local/product_local_datasource.dart';
 import 'package:ecommerce/data/datasources/local/product_local_datasource_impl.dart';
+import 'package:ecommerce/data/datasources/local/wishlist_local_datasource.dart';
 import 'package:ecommerce/data/repositories/auth_repository_impl..dart';
 import 'package:ecommerce/data/repositories/cart_repository_impl.dart';
+import 'package:ecommerce/data/repositories/wishlist_repository_impl.dart';
 import 'package:ecommerce/domain/repositories/auth_repository.dart';
 import 'package:ecommerce/domain/repositories/cart_repository.dart';
+import 'package:ecommerce/domain/repositories/wishlist_repository.dart';
 import 'package:ecommerce/domain/usecases/get_currrent_user_usecase.dart';
 import 'package:ecommerce/domain/usecases/login.dart';
 import 'package:ecommerce/domain/usecases/logout_usecase.dart';
@@ -24,6 +27,7 @@ import 'package:ecommerce/domain/usecases/remove_from_cart.dart';
 import 'package:ecommerce/domain/usecases/clear_cart.dart';
 import 'package:ecommerce/presentation/bloc/product/product_bloc.dart';
 import 'package:ecommerce/presentation/bloc/cart/cart_bloc.dart';
+import 'package:ecommerce/presentation/bloc/wishlist/wishlist_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -65,6 +69,10 @@ Future<void> init() async {
     ),
   );
 
+  sl.registerFactory(
+    () => WishlistBloc(sl()),
+  );
+
   // Use cases
   sl.registerLazySingleton(() => GetAllProducts(sl()));
   sl.registerLazySingleton(() => GetProductById(sl()));
@@ -103,6 +111,10 @@ Future<void> init() async {
     ),
   );
 
+  sl.registerLazySingleton<WishlistRepository>(
+    () => WishlistRepositoryImpl(sl()),
+  );
+
   // Data sources
   // remote
   sl.registerLazySingleton<ProductRemoteDataSource>(
@@ -112,5 +124,9 @@ Future<void> init() async {
   // local
   sl.registerLazySingleton<ProductLocalDatasource>(
     () => ProductLocalDatasoureImpl(sharedPreferences: sl()),
+  );
+
+  sl.registerLazySingleton<WishlistLocalDataSource>(
+    () => WishlistLocalDataSource(sl()),
   );
 } 
