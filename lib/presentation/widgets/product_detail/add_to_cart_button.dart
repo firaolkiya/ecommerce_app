@@ -16,7 +16,7 @@ class AddToCartButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child:  Center(
-          child: isLoading?const Text(
+          child: !isLoading?const Text(
             'Add to cart',
             style: TextStyle(
               color: Colors.white,

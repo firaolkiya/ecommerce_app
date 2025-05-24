@@ -3,6 +3,7 @@ import 'package:ecommerce/data/datasources/remote/product_remote_data_source.dar
 import 'package:ecommerce/data/models/cart_model.dart';
 import 'package:ecommerce/data/models/product_model.dart';
 import 'package:ecommerce/data/models/user_model.dart';
+import 'package:ecommerce/domain/entities/cart_item.dart';
 import 'package:ecommerce/domain/entities/product.dart';
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
@@ -52,68 +53,98 @@ Future<List<ProductModel>> getAllProducts() async {
     }
   }
 
-  @override
-  Future<CartModel> getCart(int userId) async {
-    try {
-      final response = await dio.get('/carts/user/$userId');
-      return CartModel.fromJson(response.data);
-    } catch (e) {
-      throw Exception('Failed to get cart');
-    }
-  }
+@override
+Future<CartModel> getCart(int userId) async {
+  try {
+    final response = await dio.get('https://fakestoreapi.com/carts/user/$userId');
 
-  @override
-  Future<CartModel> addToCart(int userId, ProductEntity product) async {
-    try {
-      final response = await dio.post(
-        '/carts/add',
-        data: {
-          'userId': userId,
-          'product': {
-            'id': product.id,
-            'title': product.title,
-            'price': product.price,
-            'description': product.description,
-            'category': product.category,
-            'image': product.image,
-            'rating': {
-              'rate': product.rating.rate,
-              'count': product.rating.count,
-            },
-          },
-        },
+    if (response.statusCode == 200 && response.data is List && response.data.isNotEmpty) {
+      final cartData = response.data.last;
+
+      final List<dynamic> productList = cartData['products'];
+      
+      final List<CartItem> cartItems = [];
+
+      for (var item in productList) {
+        final productId = item['productId'];
+        final quantity = item['quantity'];
+
+        final productRes = await dio.get('https://fakestoreapi.com/products/$productId');
+
+        if (productRes.statusCode == 200) {
+          final productModel = ProductModel.fromJson(productRes.data);
+          cartItems.add(CartItem(product: productModel, quantity: quantity));
+        } else {
+          throw Exception('Failed to fetch product $productId');
+        }
+      }
+
+      return CartModel(
+        id: cartData['id'],
+        userId: cartData['userId'],
+        items: cartItems,
       );
-      return CartModel.fromJson(response.data);
-    } catch (e) {
-      throw Exception('Failed to add to cart');
+    } else {
+      throw Exception('No cart found for this user');
     }
+  } catch (e) {
+    print('getCart error: $e');
+    throw Exception('Failed to get cart: $e');
   }
+}
 
-  @override
-  Future<CartModel> removeFromCart(int userId, int productId) async {
-    try {
-      final response = await dio.delete(
-        '/carts/remove',
-        data: {
-          'userId': userId,
-          'productId': productId,
-        },
-      );
-      return CartModel.fromJson(response.data);
-    } catch (e) {
-      throw Exception('Failed to remove from cart');
-    }
-  }
+  // @override
+  // Future<CartModel> addToCart(int userId, ProductEntity product) async {
+  //   try {
+  //     final response = await dio.post(
+  //       '/carts/add',
+  //       data: {
+  //         'userId': userId,
+  //         'product': {
+  //           'id': product.id,
+  //           'title': product.title,
+  //           'price': product.price,
+  //           'description': product.description,
+  //           'category': product.category,
+  //           'image': product.image,
+  //           'rating': {
+  //             'rate': product.rating.rate,
+  //             'count': product.rating.count,
+  //           },
+  //         },
+  //       },
+  //     );
+  //     return CartModel.fromJson(response.data);
+  //   } catch (e) {
+  //     throw Exception('Failed to add to cart');
+  //   }
+  // }
 
-  @override
-  Future<CartModel> clearCart(int userId) async {
-    try {
-      final response = await dio.delete('/carts/clear/$userId');
-      return CartModel.fromJson(response.data);
-    } catch (e) {
-      throw Exception('Failed to clear cart');
-    }
-  }
+  // @override
+  // Future<CartModel> removeFromCart(int userId, int productId) async {
+  //   try {
+  //     final response = await dio.delete(
+  //       '/carts/remove',
+  //       data: {
+  //         'userId': userId,
+  //         'productId': productId,
+  //       },
+  //     );
+  //     return CartModel.fromJson(response.data);
+  //   } catch (e) {
+  //     throw Exception('Failed to remove from cart');
+  //   }
+  // }
+
+  // @override
+  // Future<CartModel> clearCart(int userId) async {
+  //   try {
+  //     final response = await dio.delete('/carts/clear/$userId');
+  //     return CartModel.fromJson(response.data);
+  //   } catch (e) {
+  //     throw Exception('Failed to clear cart');
+  //   }
+  // }
 
   @override
 Future<UserModel> login(String username, String password) async {
@@ -141,5 +172,23 @@ Future<UserModel> login(String username, String password) async {
     throw Exception('Failed to login: ${e.toString()}');
   }
 }
+
+  @override
+  Future<CartModel> addToCart(int userId, ProductEntity product) {
+    // TODO: implement addToCart
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<CartModel> clearCart(int userId) {
+    // TODO: implement clearCart
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<CartModel> removeFromCart(int userId, int productId) {
+    // TODO: implement removeFromCart
+    throw UnimplementedError();
+  }
 
 } 

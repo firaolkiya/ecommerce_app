@@ -31,6 +31,7 @@ class ProductDetailPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
+          
           return AppBackground(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -52,13 +53,15 @@ class ProductDetailPage extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     AddToCartButton(
+                      isLoading:state is CartLoading,
                       onTap: () {
                         final authState = context.read<AuthBloc>().state;
                         if (authState.isLoggedIn ||
                             authState.currentUser != null) {
                           context.read<CartBloc>().add(AddToCartEvent(
                               product: productEntity,
-                              userId: authState.currentUser!.id));
+                              userId: authState.currentUser!.id
+                              ));
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

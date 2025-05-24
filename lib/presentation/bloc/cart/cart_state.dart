@@ -1,3 +1,5 @@
+import 'package:ecommerce/domain/entities/cart_item.dart';
+import 'package:ecommerce/domain/entities/product.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ecommerce/domain/entities/cart.dart';
 
@@ -16,6 +18,14 @@ class CartLoaded extends CartState {
   final Cart cart;
 
   const CartLoaded(this.cart);
+
+  double getTotalPrice(){
+    double total=0;
+    for(CartItem item in cart.items){
+      total+=item.quantity*item.product.price;
+    }
+    return total; 
+  }
 
   @override
   List<Object> get props => [cart];
