@@ -8,8 +8,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: TextEditingController(),
-      
+      controller: controller,
        decoration: InputDecoration( 
         contentPadding: EdgeInsets.all(20),
         filled: true,

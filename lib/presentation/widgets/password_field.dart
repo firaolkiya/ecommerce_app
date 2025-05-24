@@ -16,7 +16,7 @@ class CustomPasswordField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       
-      controller: TextEditingController(),
+      controller: controller,
       obscureText: !showText,
        decoration: InputDecoration( 
         contentPadding: EdgeInsets.all(20),

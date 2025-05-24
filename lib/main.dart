@@ -1,3 +1,4 @@
+import 'package:ecommerce/presentation/bloc/auth/auth_bloc.dart';
 import 'package:ecommerce/presentation/screens/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => di.sl<CartBloc>(),
+        ), 
+        BlocProvider(
+          create: (_) => di.sl<AuthBloc>(),
         ),
       ],
       child: MaterialApp(

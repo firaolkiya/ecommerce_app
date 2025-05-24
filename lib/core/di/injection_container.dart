@@ -4,6 +4,10 @@ import 'package:ecommerce/data/repositories/auth_repository_impl..dart';
 import 'package:ecommerce/data/repositories/cart_repository_impl.dart';
 import 'package:ecommerce/domain/repositories/auth_repository.dart';
 import 'package:ecommerce/domain/repositories/cart_repository.dart';
+import 'package:ecommerce/domain/usecases/get_currrent_user_usecase.dart';
+import 'package:ecommerce/domain/usecases/login.dart';
+import 'package:ecommerce/domain/usecases/logout_usecase.dart';
+import 'package:ecommerce/presentation/bloc/auth/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,6 +57,14 @@ Future<void> init() async {
     ),
   );
 
+   sl.registerFactory(
+    () => AuthBloc(
+      getUserUsecase: sl(),
+      loginUsecase: sl(),
+      logoutUsecase: sl()
+    ),
+  );
+
   // Use cases
   sl.registerLazySingleton(() => GetAllProducts(sl()));
   sl.registerLazySingleton(() => GetProductById(sl()));
@@ -61,6 +73,12 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AddToCart(sl()));
   sl.registerLazySingleton(() => RemoveFromCart(sl()));
   sl.registerLazySingleton(() => ClearCart(sl()));
+  sl.registerLazySingleton(() => LoginUsecase(authRepository: sl()));
+  sl.registerLazySingleton(() => LogoutUsecase(repository:  sl()));
+  sl.registerLazySingleton(() => GetCurrentUserUsecase(authRepository: sl()));
+  
+
+
 
   // Repository
   sl.registerLazySingleton<ProductRepository>(

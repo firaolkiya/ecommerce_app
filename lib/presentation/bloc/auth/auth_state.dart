@@ -13,7 +13,7 @@ part of 'auth_bloc.dart';
   });
   
   @override
-  List<Object> get props => [currentUser??'none'];
+  List<Object?> get props => [currentUser,isLoading,isLoggedIn,error];
 
   AuthState copyWith(
     { User? currentUser,

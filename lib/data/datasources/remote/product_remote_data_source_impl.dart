@@ -116,22 +116,30 @@ Future<List<ProductModel>> getAllProducts() async {
   }
 
   @override
-  Future<UserModel> login(String username, String password) async{
-    try{
-    final response = await  dio.get('https://fakestoreapi.com/users');
-    return UserModel.fromJson(
-      {
-      "id": 0,
-      "username": username,
-      "email": "string",
-      "password": password
-      }
+Future<UserModel> login(String username, String password) async {
+  try {
+    final loginResponse = await dio.post(
+      'https://fakestoreapi.com/users',
+      data: {
+        'username': username,
+        'password': password,
+      },
     );
+    if (loginResponse.statusCode != 200 || loginResponse.data['id'] == null) {
+      throw Exception('Invalid credentials');
+    }
 
+    // Assuming the login response also returns the user ID
+    final int userId = loginResponse.data['id'];
+    final userResponse = await dio.get('https://fakestoreapi.com/users/$userId');
+    if (userResponse.statusCode != 200 || userResponse.data==null) {
+      throw Exception('Failed to retrieve user data');
     }
-    catch(e){
-       throw Exception('Failed to login');
-    }
-    
+
+    return UserModel.fromJson(userResponse.data);
+  } catch (e) {
+    throw Exception('Failed to login: ${e.toString()}');
   }
+}
+
 } 
