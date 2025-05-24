@@ -21,7 +21,10 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     final int userId = context.read<AuthBloc>().state.currentUser!.id;
-    context.read<CartBloc>().add(GetCartEvent(userId));
+    final cartBloc = context.read<CartBloc>();
+    if(cartBloc.state is !CartLoaded){
+      cartBloc.add(GetCartEvent(userId));
+    }
     super.initState();
   }
 
@@ -58,9 +61,7 @@ class _CartPageState extends State<CartPage> {
           if(state is CartError){
             return Center(child: Text(state.message),);
           }
-          if(state is !CartLoaded){
-            return const Center(child: CircularProgressIndicator(),);
-          }
+          if(state is CartLoaded){
           final cartItems = state.cart.items;
           return AppBackground(
             child: Padding(
@@ -94,6 +95,8 @@ class _CartPageState extends State<CartPage> {
               ),
             ),
           );
+          }
+          return const Center(child: CircularProgressIndicator(),);
         },
       ),
     );

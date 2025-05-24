@@ -14,9 +14,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
  @override
 Future<List<ProductModel>> getAllProducts() async {
   try {
-    print('Calling API...');
     final response = await dio.get('https://fakestoreapi.com/products');
-    print('Response received: ${response.statusCode}');
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = response.data;
@@ -95,6 +93,7 @@ Future<CartModel> getCart(int userId) async {
 @override
 Future<CartModel> addToCart(CartModel cart, ProductEntity product) async {
   try {
+    print('called at');
     final cartId = cart.id;
     final userId = cart.userId;
 

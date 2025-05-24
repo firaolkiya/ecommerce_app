@@ -52,6 +52,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     RemoveFromCartEvent event,
     Emitter<CartState> emit,
   ) async {
+
     emit(CartLoading());
     final result = await removeFromCart(event.userId, event.productId);
     result.fold(

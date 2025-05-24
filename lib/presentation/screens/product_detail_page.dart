@@ -25,13 +25,23 @@ class ProductDetailPage extends StatelessWidget {
       body: BlocConsumer<CartBloc, CartState>(
         listener: (context, state) {
           if(state is CartLoaded){
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) =>const CartPage(),)
-            );
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Successfully added to cart'),
+                  backgroundColor: Colors.lightBlue.shade300,
+                  behavior: SnackBarBehavior.floating,
+                  margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              );
+
           }
+
         },
         builder: (context, state) {
-          
+          if(state is CartError){
+            return Center(child: Text(state.message),);
+          }
           return AppBackground(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -43,7 +53,7 @@ class ProductDetailPage extends StatelessWidget {
                     ProductImage(
                       imageUrl: productEntity.image,
                     ),
-                    Flexible(child: SizedBox(height: 40)),
+                    const Flexible(child: SizedBox(height: 40)),
                     ProductInfo(
                       name: productEntity.description,
                       category: productEntity.category,
@@ -51,7 +61,7 @@ class ProductDetailPage extends StatelessWidget {
                       reviewCount: productEntity.rating.count,
                       price: '\$${productEntity.price}',
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     AddToCartButton(
                       isLoading:state is CartLoading,
                       onTap: () {

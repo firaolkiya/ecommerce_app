@@ -38,11 +38,12 @@ class CartRepositoryImpl implements CartRepository {
       if (product.id <= 0) {
         return Left(ValidationFailure(message: 'Product ID must be greater than 0'));
       }
-       CartModel? recentCart = await localDatasource.getRecentCart();
-      recentCart ??= await remoteDataSource.getCart(userId);
+      print('here2');
+       CartModel? recentCart = await remoteDataSource.getCart(userId);
       final cart = await remoteDataSource.addToCart(recentCart, product);
       return Right(cart);
     } catch (e) {
+      print(e.toString());
       return Left(ServerFailure(message: e.toString()));
     }
   }
