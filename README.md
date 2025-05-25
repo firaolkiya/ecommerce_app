@@ -4,7 +4,8 @@
 This project is a comprehensive ecommerce application built with Flutter. It includes robust features such as a wishlist, product browsing, cart management, and user authentication. The application ensures a seamless shopping experience with local data persistence using `shared_preferences` and is structured following a clean, modular architecture.
 
 ---
-[![Watch the demo](https://github.com/user-attachments/assets/31a38095-aa36-4a9a-8314-62f898389994)
+##Watch Demo
+https://www.loom.com/share/7dc2cffbfc844a66a3a01f806e28a9d1?sid=94e107ed-66c9-464e-9cea-208ef6c53484
 
 ## Architecture
 
