@@ -4,6 +4,7 @@
 This project is a comprehensive ecommerce application built with Flutter. It includes robust features such as a wishlist, product browsing, cart management, and user authentication. The application ensures a seamless shopping experience with local data persistence using `shared_preferences` and is structured following a clean, modular architecture.
 
 ---
+[![Watch the demo](https://github.com/user-attachments/assets/31a38095-aa36-4a9a-8314-62f898389994)
 
 ## Architecture
 
@@ -68,15 +69,14 @@ Manages UI and state using BLoC pattern:
 ### User Info
 - Secure login
 - Enables quick app launch and personalization
-![Image](https://github.com/user-attachments/assets/c0a6f474-37f2-4ffb-8d9f-910eccbf287f)
 
 ### Product Browsing
 =- Detailed product view
+![Image](https://github.com/user-attachments/assets/c0a6f474-37f2-4ffb-8d9f-910eccbf287f)
 ![Image](https://github.com/user-attachments/assets/0347e39b-cae0-4bc1-aea5-7974f4f9eea9)
 ![Image](https://github.com/user-attachments/assets/3d1a1c78-0cff-4b12-925f-3af0d18fb212)
 ![Image](https://github.com/user-attachments/assets/b11b5ce2-9b79-4bec-b2e5-c2961a56adda)
 ---
-[![Watch the demo](https://github.com/user-attachments/assets/31a38095-aa36-4a9a-8314-62f898389994)
 ## State Management
 
 Utilizes the **BLoC pattern** for all features, with each BLoC handling events (e.g., `AddToCartEvent`, `LoadUserEvent`) and mapping them to appropriate states while interacting with repositories and data sources.
