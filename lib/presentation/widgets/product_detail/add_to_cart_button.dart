@@ -1,3 +1,4 @@
+import 'package:ecommerce/core/utils/devices.dart';
 import 'package:flutter/material.dart';
 
 class AddToCartButton extends StatelessWidget {
@@ -9,7 +10,7 @@ class AddToCartButton extends StatelessWidget {
     return InkWell(
       onTap: isLoading?(){}:onTap,
       child: Container(
-        width: double.infinity,
+        width: AppDevices.getDeviceWidth(context)*0.5,
         height: 50,
         decoration: BoxDecoration(
           color: isLoading?Colors.grey:Colors.black87,

@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:ecommerce/domain/entities/cart_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecommerce/domain/usecases/get_cart.dart';
 import 'package:ecommerce/domain/usecases/add_to_cart.dart';
@@ -22,6 +25,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<AddToCartEvent>(_onAddToCart);
     on<RemoveFromCartEvent>(_onRemoveFromCart);
     on<ClearCartEvent>(_onClearCart);
+   on<UpdateCart>(_onUpdateCart);
+
   }
 
   Future<void> _onGetCart(
@@ -71,5 +76,19 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       (failure) => emit(CartError(failure.message)),
       (cart) => emit(CartLoaded(cart)),
     );
+  }
+
+  Future<void>_onUpdateCart(UpdateCart event,Emitter<CartState> emit)async{
+    if(state is CartLoaded){
+      final cart =  (state as CartLoaded).cart;
+      emit(CartLoading());
+
+      for(CartItem item in cart.items){
+          if (item.product.id==event.itemId){
+            item.quantity=max(0,item.quantity+event.amount);
+          }
+      }
+      emit(CartLoaded(cart));
+    }
   }
 } 

@@ -1,3 +1,7 @@
+import 'package:ecommerce/presentation/bloc/auth/auth_bloc.dart';
+import 'package:ecommerce/presentation/bloc/cart/cart_bloc.dart';
+import 'package:ecommerce/presentation/bloc/cart/cart_event.dart';
+import 'package:ecommerce/presentation/bloc/cart/cart_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/wishlist/wishlist_bloc.dart';
@@ -12,6 +16,7 @@ class WishlistPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int loading=-1;
     return Scaffold(
       body: AppBackground(
         child: SafeArea(
@@ -53,18 +58,39 @@ class WishlistPage extends StatelessWidget {
                             ),
                           );
                         }
-                        return ListView.separated(
-                          itemCount: state.products.length,
-                          separatorBuilder: (context, index) => const SizedBox(height: 16),
-                          itemBuilder: (context, index) {
-                            final product = state.products[index];
-                            return WishlistItem(
-                              imageUrl: product.imageUrl,
-                              title: product.name,
-                              price: '\$${product.price.toStringAsFixed(2)}',
-                              onRemove: () {
-                                context.read<WishlistBloc>().add(
-                                  RemoveFromWishlistEvent(product.id),
+                        return BlocBuilder<CartBloc, CartState>(
+
+                          builder: (context, cartState) {
+                            return ListView.separated(
+                              itemCount: state.products.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 16),
+                              itemBuilder: (context, index) {
+                                final product = state.products[index];
+                                return WishlistItem(
+                                  isLoading: cartState is CartLoading && loading==index,
+                                  imageUrl: product.image,
+                                  title: product.title,
+                                  price:
+                                      '\$${product.price.toStringAsFixed(2)}',
+                                  onRemove: () {
+                                    context.read<WishlistBloc>().add(
+                                          RemoveFromWishlistEvent(product.id),
+                                        );
+                                  },
+                                  onAddToCArt: () {
+                                    loading=index;
+                                    final int userId = context
+                                        .read<AuthBloc>()
+                                        .state
+                                        .currentUser!
+                                        .id;
+                                    context.read<CartBloc>().add(
+                                          AddToCartEvent(
+                                              product: state.products[index],
+                                              userId: userId),
+                                        );
+                                  },
                                 );
                               },
                             );

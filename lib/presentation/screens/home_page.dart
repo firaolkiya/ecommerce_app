@@ -5,12 +5,12 @@ import 'package:ecommerce/presentation/bloc/product/product_state.dart';
 import 'package:ecommerce/presentation/bloc/wishlist/wishlist_bloc.dart';
 import 'package:ecommerce/presentation/bloc/wishlist/wishlist_event.dart';
 import 'package:ecommerce/presentation/bloc/wishlist/wishlist_state.dart';
+import 'package:ecommerce/presentation/screens/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/app_background.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/product_card.dart';
-import '../../../domain/models/wishlist_product.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     context.read<ProductBloc>().add(GetAllProductsEvent());
+    context.read<WishlistBloc>().add(GetWishlistEvent());
     super.initState();
   }
 
@@ -31,11 +32,10 @@ class _HomePageState extends State<HomePage> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, authState) {
         if(!authState.isLoggedIn){
-          Navigator.of(context).pop();
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginPage(),));
         }
       },
       builder: (context, authState) {
-        
         return Scaffold(
             appBar: AppBar(
               toolbarHeight: 80,
@@ -97,50 +97,25 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 16),
                       Expanded(
-                        child: ListView.separated(
-                          separatorBuilder: (context, index) => const SizedBox(height: 15),
-                          shrinkWrap: true,
-                          itemCount: state.products.length,
-                          itemBuilder: (context, index) {
-                            final product = state.products[index];
-                            return BlocBuilder<WishlistBloc, WishlistState>(
-                              builder: (context, wishlistState) {
-                                final isInWishlist = wishlistState is WishlistLoaded && 
-                                    wishlistState.wishlistStatus[product.id] == true;
-                                
-                                return ProductCard(
-                                  product: WishlistProduct(
-                                    id: product.id.toString(),
-                                    name: product.title,
-                                    price: product.price,
-                                    imageUrl: product.image,
-                                    description: product.description,
-                                  ),
-                                  isInWishlist: isInWishlist,
-                                  onWishlistToggle: () {
-                                    if (isInWishlist) {
-                                      context.read<WishlistBloc>().add(
-                                        RemoveFromWishlistEvent(product.id.toString()),
-                                      );
-                                    } else {
-                                      context.read<WishlistBloc>().add(
-                                        AddToWishlistEvent(
-                                          WishlistProduct(
-                                            id: product.id.toString(),
-                                            name: product.title,
-                                            price: product.price,
-                                            imageUrl: product.image,
-                                            description: product.description,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
+                        child: BlocBuilder<WishlistBloc, WishlistState>(
+                            builder: (context, wishListState) {
+                              return ListView.separated(
+                                separatorBuilder: (context, index) => const SizedBox(height: 10),
+                                itemCount: state.products.length,
+                                itemBuilder: (context, index) {
+                                  final product = state.products[index];
+                                  final isFavorite = wishListState is WishlistLoaded
+                                      ? wishListState.wishlistStatus[product.id] ?? false
+                                      : false;
+
+                                  return ProductCard(
+                                    productEntity: product,
+                                    isFavorite: isFavorite,
+                                  );
+                                },
+                              );
+                            },
+                          ),
                       ),
                     ],
                   );

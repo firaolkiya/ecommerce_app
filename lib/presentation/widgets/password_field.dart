@@ -44,7 +44,11 @@ class CustomPasswordField extends StatelessWidget {
         ),
         suffixIcon: IconButton(
           onPressed: onShowPassword,
-           icon: Icon(Icons.remove_red_eye)
+           icon:  SvgPicture.asset(
+          height: 12,
+          width: 12,
+          fit: BoxFit.cover,
+          'assets/images/eye.svg'),
         )
        ),
     );

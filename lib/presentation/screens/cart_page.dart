@@ -18,9 +18,10 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  late int userId;
   @override
   void initState() {
-    final int userId = context.read<AuthBloc>().state.currentUser!.id;
+     userId = context.read<AuthBloc>().state.currentUser!.id;
     final cartBloc = context.read<CartBloc>();
     if(cartBloc.state is !CartLoaded){
       cartBloc.add(GetCartEvent(userId));
@@ -32,7 +33,8 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         leading: Padding(
           padding: const EdgeInsets.all(22.0),
           child: Text(
@@ -64,35 +66,42 @@ class _CartPageState extends State<CartPage> {
           if(state is CartLoaded){
           final cartItems = state.cart.items;
           return AppBackground(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: ListView.separated(
                       shrinkWrap: true,
                       itemCount: cartItems.length,
                       itemBuilder: (context, index) =>  CartItem(
+                         id: cartItems[index].product.id,
                           imageUrl: cartItems[index].product.image,
                           title: cartItems[index].product.title,
                           price: '\$${cartItems[index].product.price}',
                           quantity: cartItems[index].quantity,
+                          onRemove: (dir){
+                                    context.read<CartBloc>().add(RemoveFromCartEvent(userId: userId, productId: cartItems[index].product.id));
+                          },
                         ),
                         separatorBuilder: (context, index) => const SizedBox(height: 15,),
                     ),
                   ),
-                  Divider(),
-                  Row(
+                ),
+                const Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CartTotal(total: '\$${state.getTotalPrice()}'),
+                      CartTotal(total: '\$${state.getTotal()}'),
                       const SizedBox(width: 22),
                       const CheckoutButton(),
                     ],
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           );
           }

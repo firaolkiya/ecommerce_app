@@ -20,7 +20,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
     emit(WishlistLoading());
     try {
       final products = await _wishlistRepository.getWishlist();
-      final wishlistStatus = <String, bool>{};
+      final wishlistStatus = <int, bool>{};
       
       for (var product in products) {
         wishlistStatus[product.id] = true;
@@ -64,10 +64,11 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
     Emitter<WishlistState> emit,
   ) async {
     try {
+      add(GetWishlistEvent());
       final isInWishlist = await _wishlistRepository.isInWishlist(event.productId);
       if (state is WishlistLoaded) {
         final currentState = state as WishlistLoaded;
-        final updatedStatus = Map<String, bool>.from(currentState.wishlistStatus);
+        final updatedStatus = Map<int, bool>.from(currentState.wishlistStatus);
         updatedStatus[event.productId] = isInWishlist;
         
         emit(currentState.copyWith(wishlistStatus: updatedStatus));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProductInfo extends StatelessWidget {
   final String name;
@@ -18,74 +19,58 @@ class ProductInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          name,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
-          ),
+    return Padding(
+      padding: const EdgeInsets.all(17.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white
         ),
-        const SizedBox(height: 4),
-        Text(
-          category,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.star, color: Colors.amber, size: 18),
-            const SizedBox(width: 4),
             Text(
-              '$rating',
-              style: const TextStyle(
-                fontSize: 14,
+              name,
+              style: GoogleFonts.urbanist(
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(0, 0, 0, 0.75),
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(height: 4),
             Text(
-              '$reviewCount Reviews',
-              style: const TextStyle(
+              category,
+              style: GoogleFonts.urbanist(
                 fontSize: 14,
-                color: Colors.grey,
+                color: const Color.fromRGBO(0, 0, 0, 0.5),
               ),
             ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.star, color: Colors.black, size: 18),
+                const SizedBox(width: 4),
+                Text(
+                  '$rating',
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '$reviewCount Reviews',
+                  style: GoogleFonts.urbanist(
+                    fontSize: 14,
+                    color: const Color.fromARGB(255, 166, 166, 170),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+           
           ],
         ),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(color: Colors.black12),
-              bottom: BorderSide(color: Colors.black12),
-            ),
-          ),
-          child: Text(
-            'Price',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          price,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

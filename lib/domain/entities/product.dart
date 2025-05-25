@@ -1,3 +1,4 @@
+import 'package:ecommerce/data/models/product_model.dart';
 import 'package:ecommerce/domain/entities/rating.dart';
 
 class ProductEntity {
@@ -18,6 +19,7 @@ class ProductEntity {
     required this.image,
     required this.rating,
   });
+
 
   Map<String, dynamic> toJson() {
   return {

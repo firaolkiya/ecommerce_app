@@ -1,4 +1,10 @@
+import 'dart:math';
+
+import 'package:ecommerce/presentation/bloc/cart/cart_bloc.dart';
+import 'package:ecommerce/presentation/bloc/cart/cart_event.dart';
+import 'package:ecommerce/presentation/bloc/cart/cart_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CartItem extends StatelessWidget {
@@ -6,19 +12,26 @@ class CartItem extends StatelessWidget {
   final String title;
   final String price;
   final int quantity;
-
+  final int id;
+  final Function (DismissDirection dir) onRemove;
   const CartItem({
     Key? key,
     required this.imageUrl,
     required this.title,
     required this.price,
     required this.quantity,
+    required this.onRemove,
+     required this.id,
   }) : super(key: key);
 
+  
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+      return Dismissible(
       key: Key('delete'),
+      onDismissed: onRemove,
       direction: DismissDirection.endToStart,
       background: Container(
         color: Color.fromRGBO(204,71,78,1),
@@ -48,7 +61,7 @@ class CartItem extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: GoogleFonts.urbanist(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -66,21 +79,26 @@ class CartItem extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildQuantityButton(Icons.remove),
+                        _buildQuantityButton(Icons.remove,(){
+                          context.read<CartBloc>().add(UpdateCart(itemId:id,amount: -1 ));
+                        }),
                         Container(width: 1,color: Color.fromRGBO(217, 217, 217, 1),height: 42,),
                         Container(
                           width: 30,
                           alignment: Alignment.center,
                           child: Text(
-                            '$quantity',
-                            style: const TextStyle(
+                            '${quantity}',
+                            style: GoogleFonts.urbanist(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                         Container(width: 1,color: Color.fromRGBO(217, 217, 217, 1),height: 42,),
-                        _buildQuantityButton(Icons.add),
+                        _buildQuantityButton(Icons.add,(){
+                            context.read<CartBloc>().add(UpdateCart(itemId:id,amount: 1 ));
+
+                        }),
                       ],
                     ),
                   ),
@@ -95,37 +113,30 @@ class CartItem extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            // Container(
-            //   width: 40,
-            //   height: 40,
-            //   decoration: BoxDecoration(
-            //     color: Colors.red.shade400,
-            //     borderRadius: BorderRadius.circular(4),
-            //   ),
-            //   child: const Icon(
-            //     Icons.delete_outline,
-            //     color: Colors.white,
-            //     size: 20,
-            //   ),
-            // ),
+            
           ],
         ),
-      ),
+      ));
+      }
     );
+      
   }
 
-  Widget _buildQuantityButton(IconData icon) {
-    return Container(
-      width: 24,
-      height: 24,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.black),
-      ),
-      child: Icon(
-        icon,
-        size: 16,
-        color: Colors.black,
+  Widget _buildQuantityButton(IconData icon,VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 24,
+        height: 24,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.black),
+        ),
+        child: Icon(
+          icon,
+          size: 16,
+          color: Colors.black,
+        ),
       ),
     );
   }

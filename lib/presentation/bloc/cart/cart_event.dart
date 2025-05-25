@@ -43,6 +43,13 @@ class RemoveFromCartEvent extends CartEvent {
   List<Object> get props => [userId, productId];
 }
 
+class UpdateCart extends CartEvent{
+  final int itemId;
+  final int amount;
+
+  UpdateCart({required this.itemId, required this.amount});
+}
+
 class ClearCartEvent extends CartEvent {
   final int userId;
 

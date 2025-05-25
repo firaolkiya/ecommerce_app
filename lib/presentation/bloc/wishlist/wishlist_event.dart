@@ -1,5 +1,5 @@
+import 'package:ecommerce/domain/entities/product.dart';
 import 'package:equatable/equatable.dart';
-import '../../../domain/models/wishlist_product.dart';
 
 abstract class WishlistEvent extends Equatable {
   const WishlistEvent();
@@ -11,16 +11,15 @@ abstract class WishlistEvent extends Equatable {
 class GetWishlistEvent extends WishlistEvent {}
 
 class AddToWishlistEvent extends WishlistEvent {
-  final WishlistProduct product;
+  final ProductEntity product;
 
   const AddToWishlistEvent(this.product);
-
   @override
   List<Object> get props => [product];
 }
 
 class RemoveFromWishlistEvent extends WishlistEvent {
-  final String productId;
+  final int productId;
 
   const RemoveFromWishlistEvent(this.productId);
 
@@ -29,7 +28,7 @@ class RemoveFromWishlistEvent extends WishlistEvent {
 }
 
 class CheckWishlistStatusEvent extends WishlistEvent {
-  final String productId;
+  final int productId;
 
   const CheckWishlistStatusEvent(this.productId);
 

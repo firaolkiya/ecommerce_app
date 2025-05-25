@@ -136,22 +136,42 @@ Future<CartModel> addToCart(CartModel cart, ProductEntity product) async {
   }
 }
 
+@override
+Future<CartModel> removeFromCart(int userId, int productId, CartModel cart) async {
+  try {
+    final cartId = cart.id;
 
-  // @override
-  // Future<CartModel> removeFromCart(int userId, int productId) async {
-  //   try {
-  //     final response = await dio.delete(
-  //       '/carts/remove',
-  //       data: {
-  //         'userId': userId,
-  //         'productId': productId,
-  //       },
-  //     );
-  //     return CartModel.fromJson(response.data);
-  //   } catch (e) {
-  //     throw Exception('Failed to remove from cart');
-  //   }
-  // }
+    // Create a new list with updated quantities or removed items
+    cart.items.removeWhere((item)=>item.product.id==productId);
+
+   
+
+    // Send PUT request to update the cart
+    final response = await dio.put('https://fakestoreapi.com/carts/$cartId', data: {
+      'id': cartId,
+      'userId': userId,
+      'products': cart.items
+          .map((e) => {
+                'productId': e.product.id,
+                'quantity': e.quantity,
+              })
+          .toList(),
+    });
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to remove from cart');
+    }
+
+    return CartModel(
+      id: cartId,
+      userId: userId,
+      items: cart.items,
+    );
+  } catch (e) {
+    throw Exception('Failed to remove from cart');
+  }
+}
+
 
   // @override
   // Future<CartModel> clearCart(int userId) async {
@@ -198,10 +218,6 @@ Future<UserModel> login(String username, String password) async {
     throw UnimplementedError();
   }
 
-  @override
-  Future<CartModel> removeFromCart(int userId, int productId) {
-    // TODO: implement removeFromCart
-    throw UnimplementedError();
-  }
+
 
 } 

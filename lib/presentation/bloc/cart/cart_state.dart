@@ -16,16 +16,15 @@ class CartLoading extends CartState {}
 
 class CartLoaded extends CartState {
   final Cart cart;
+   CartLoaded(this.cart);
 
-  const CartLoaded(this.cart);
-
-  double getTotalPrice(){
+   double getTotal(){
     double total=0;
-    for(CartItem item in cart.items){
-      total+=item.quantity*item.product.price;
+    for (CartItem item in cart.items){
+      total+=item.product.price*item.quantity;
     }
-    return total; 
-  }
+    return total;
+   }
 
   @override
   List<Object> get props => [cart];

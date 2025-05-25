@@ -1,5 +1,5 @@
+import 'package:ecommerce/domain/entities/product.dart';
 import 'package:equatable/equatable.dart';
-import '../../../domain/models/wishlist_product.dart';
 
 abstract class WishlistState extends Equatable {
   const WishlistState();
@@ -13,8 +13,8 @@ class WishlistInitial extends WishlistState {}
 class WishlistLoading extends WishlistState {}
 
 class WishlistLoaded extends WishlistState {
-  final List<WishlistProduct> products;
-  final Map<String, bool> wishlistStatus;
+  final List<ProductEntity> products;
+  final Map<int, bool> wishlistStatus;
 
   const WishlistLoaded({
     required this.products,
@@ -25,8 +25,8 @@ class WishlistLoaded extends WishlistState {
   List<Object> get props => [products, wishlistStatus];
 
   WishlistLoaded copyWith({
-    List<WishlistProduct>? products,
-    Map<String, bool>? wishlistStatus,
+    List<ProductEntity>? products,
+    Map<int, bool>? wishlistStatus,
   }) {
     return WishlistLoaded(
       products: products ?? this.products,
