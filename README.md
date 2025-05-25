@@ -66,15 +66,16 @@ Manages UI and state using BLoC pattern:
 - Restores cart state on app relaunch
 
 ### User Info
-- Secure login and registration
-- Stores basic user profile info locally (name, email, auth token)
+- Secure login
 - Enables quick app launch and personalization
+![Image](https://github.com/user-attachments/assets/c0a6f474-37f2-4ffb-8d9f-910eccbf287f)
 
 ### Product Browsing
-- Category browsing
-- Product search functionality
-- Detailed product view
-
+=- Detailed product view
+![Image](https://github.com/user-attachments/assets/0347e39b-cae0-4bc1-aea5-7974f4f9eea9)
+![Image](https://github.com/user-attachments/assets/25c0e4a5-e410-43d6-9397-dafb6cf83144)
+![Image](https://github.com/user-attachments/assets/3d1a1c78-0cff-4b12-925f-3af0d18fb212)
+![Image](https://github.com/user-attachments/assets/b11b5ce2-9b79-4bec-b2e5-c2961a56adda)
 ---
 [![Watch the demo](https://github.com/user-attachments/assets/31a38095-aa36-4a9a-8314-62f898389994)
 ## State Management
