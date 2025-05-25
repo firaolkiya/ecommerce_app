@@ -179,3 +179,8 @@ ecommerce/
 ![Image](https://github.com/user-attachments/assets/0347e39b-cae0-4bc1-aea5-7974f4f9eea9)
 ![Image](https://github.com/user-attachments/assets/3d1a1c78-0cff-4b12-925f-3af0d18fb212)
 ![Image](https://github.com/user-attachments/assets/b11b5ce2-9b79-4bec-b2e5-c2961a56adda)
+
+![Image](https://github.com/user-attachments/assets/2d8a0221-e998-4d25-badd-3dff286340cd)
+![Image](https://github.com/user-attachments/assets/3ee6bd78-4c57-40a4-bfd0-6b52dbc9ad75)
+![Image](https://github.com/user-attachments/assets/c3772af2-e5e9-407e-890c-c7bd427f142c)
+![Image](https://github.com/user-attachments/assets/980ed909-0a4d-45cc-b7c9-c42372de5567)
