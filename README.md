@@ -73,7 +73,6 @@ Manages UI and state using BLoC pattern:
 ### Product Browsing
 =- Detailed product view
 ![Image](https://github.com/user-attachments/assets/0347e39b-cae0-4bc1-aea5-7974f4f9eea9)
-![Image](https://github.com/user-attachments/assets/25c0e4a5-e410-43d6-9397-dafb6cf83144)
 ![Image](https://github.com/user-attachments/assets/3d1a1c78-0cff-4b12-925f-3af0d18fb212)
 ![Image](https://github.com/user-attachments/assets/b11b5ce2-9b79-4bec-b2e5-c2961a56adda)
 ---
