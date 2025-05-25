@@ -76,7 +76,7 @@ Manages UI and state using BLoC pattern:
 - Detailed product view
 
 ---
-
+[![Watch the demo](https://github.com/user-attachments/assets/31a38095-aa36-4a9a-8314-62f898389994)
 ## State Management
 
 Utilizes the **BLoC pattern** for all features, with each BLoC handling events (e.g., `AddToCartEvent`, `LoadUserEvent`) and mapping them to appropriate states while interacting with repositories and data sources.
