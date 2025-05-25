@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               toolbarHeight: 80,
               leadingWidth: 230,
+              surfaceTintColor: Colors.transparent,
               leading:  Padding(
                 padding: const EdgeInsets.only(left: 15.0, top: 10),
                 child: Column(
