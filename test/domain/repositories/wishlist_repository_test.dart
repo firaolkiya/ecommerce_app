@@ -9,7 +9,7 @@ import 'package:ecommerce/data/repositories/wishlist_repository_impl.dart';
 import 'package:ecommerce/data/models/product_model.dart';
 import 'package:ecommerce/data/models/rating_model.dart';
 
-@GenerateMocks([WishlistLocalDataSource])
+  @GenerateMocks([WishlistLocalDataSource])
 import 'wishlist_repository_test.mocks.dart';
 
 void main() {
@@ -52,7 +52,7 @@ void main() {
       final result = await repository.getWishlist();
 
       // assert
-      expect(result, [tProduct]);
+      expect(result, [tProductModel]);
       verify(mockLocalDataSource.getWishlist());
       verifyNoMoreInteractions(mockLocalDataSource);
     });

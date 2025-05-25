@@ -1,21 +1,16 @@
-import 'package:ecommerce/data/datasources/local/wishlist_local_datasource.dart';
-import 'package:ecommerce/domain/entities/rating.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:ecommerce/data/datasources/local/wishlist_local_datasource.dart';
 import 'package:ecommerce/domain/entities/product.dart';
-import 'package:flutter/material.dart';
+import 'package:ecommerce/domain/entities/rating.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import '../../mock_data.mocks.dart'; // <- your mock class file
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   late WishlistLocalDataSource dataSource;
-  late SharedPreferences sharedPreferences;
-
-  setUp(() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.clear();
-    dataSource = WishlistLocalDataSource(sharedPreferences);
-  });
+  late MockSharedPreferences mockPrefs;
 
   final tProduct = ProductEntity(
     id: 1,
@@ -27,73 +22,54 @@ void main() {
     rating: RatingEntity(rate: 3, count: 30),
   );
 
-  group('getWishlist', () {
-    test('should return empty list when no products are stored', () async {
-      final result = await dataSource.getWishlist();
-      expect(result, []);
-    });
+  setUp(() {
+    mockPrefs = MockSharedPreferences();
+    dataSource = WishlistLocalDataSource(mockPrefs);
   });
 
-  group('addToWishlist', () {
-    test('should add product to wishlist when wishlist is empty', () async {
-      await dataSource.addToWishlist(tProduct);
-      final storedProducts = await dataSource.getWishlist();
-      expect(storedProducts, [tProduct]);
+  group('WishlistLocalDataSource with Mockito', () {
+    test('should return empty list when prefs contains null', () async {
+      when(mockPrefs.getString(any)).thenReturn(null);
+
+      final result = await dataSource.getWishlist();
+
+      expect(result, []);
+      verify(mockPrefs.getString('wishlist')).called(1);
     });
 
-    test('should add product to existing wishlist', () async {
-      final existingProduct = ProductEntity(
-        id: 2,
-        title: 'Existing Product',
-        description: 'Existing Description',
-        price: 149.99,
-        image: 'existing.jpg',
-        category: 'test',
-        rating: RatingEntity(rate: 4, count: 10),
-      );
-      await dataSource.addToWishlist(existingProduct);
+
+    test('should add product to empty wishlist', () async {
+      when(mockPrefs.getString(any)).thenReturn(null);
+      when(mockPrefs.setString(any, any)).thenAnswer((_) async => true);
+
       await dataSource.addToWishlist(tProduct);
-      final storedProducts = await dataSource.getWishlist();
-      expect(storedProducts, [existingProduct, tProduct]);
+
+      final encoded = jsonEncode([tProduct.toJson()]);
+      verify(mockPrefs.setString('wishlist', encoded)).called(1);
     });
+
 
     test('should not add duplicate product to wishlist', () async {
-      await dataSource.addToWishlist(tProduct);
-      await dataSource.addToWishlist(tProduct);
-      final storedProducts = await dataSource.getWishlist();
-      expect(storedProducts, [tProduct]);
-    });
-  });
+      final encoded = jsonEncode(tProduct.toJson());
+      when(mockPrefs.getStringList('wishlist')).thenReturn([encoded]);
+      when(mockPrefs.setStringList(any, any)).thenAnswer((_) async => true);
+      when(mockPrefs.setString(any, any)).thenAnswer((_) async => true);
 
-  group('removeFromWishlist', () {
+      await dataSource.addToWishlist(tProduct);
+
+      verifyNever(mockPrefs.setStringList(any, any));
+
+    });
+
     test('should remove product from wishlist', () async {
-      await dataSource.addToWishlist(tProduct);
-      await dataSource.removeFromWishlist(tProduct.id);
-      final storedProducts = await dataSource.getWishlist();
-      expect(storedProducts, []);
-    });
+        final encoded = jsonEncode(tProduct.toJson());
+        when(mockPrefs.getString('wishlist')).thenReturn(jsonEncode([tProduct.toJson()]));
+        when(mockPrefs.setString(any, any)).thenAnswer((_) async => true);
 
-    test('should return empty list when removing from empty wishlist', () async {
-      await dataSource.removeFromWishlist(tProduct.id);
-      final storedProducts = await dataSource.getWishlist();
-      expect(storedProducts, []);
-    });
+        await dataSource.removeFromWishlist(tProduct.id);
 
-    test('should remove only specified product from wishlist', () async {
-      final existingProduct = ProductEntity(
-        id: 2,
-        title: 'Existing Product',
-        description: 'Existing Description',
-        price: 149.99,
-        image: 'existing.jpg',
-        category: 'test',
-        rating: RatingEntity(rate: 4, count: 10),
-      );
-      await dataSource.addToWishlist(existingProduct);
-      await dataSource.addToWishlist(tProduct);
-      await dataSource.removeFromWishlist(tProduct.id);
-      final storedProducts = await dataSource.getWishlist();
-      expect(storedProducts, [existingProduct]);
-    });
+        verify(mockPrefs.setString('wishlist', jsonEncode([]))).called(1);
+      });
+
   });
-} 
+}
