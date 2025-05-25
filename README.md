@@ -72,11 +72,7 @@ Manages UI and state using BLoC pattern:
 
 ### Product Browsing
 =- Detailed product view
-![Image](https://github.com/user-attachments/assets/05eaeefc-3759-4fcc-8a5f-36c77780a82f)
-![Image](https://github.com/user-attachments/assets/c0a6f474-37f2-4ffb-8d9f-910eccbf287f) 
-![Image](https://github.com/user-attachments/assets/0347e39b-cae0-4bc1-aea5-7974f4f9eea9)
-![Image](https://github.com/user-attachments/assets/3d1a1c78-0cff-4b12-925f-3af0d18fb212)
-![Image](https://github.com/user-attachments/assets/b11b5ce2-9b79-4bec-b2e5-c2961a56adda)
+
 ---
 ## State Management
 
@@ -175,3 +171,10 @@ ecommerce/
 │           ├── wishlist_bloc_test.dart
 │           └── user_bloc_test.dart
 └── pubspec.yaml
+```
+## Screenshoots
+![Image](https://github.com/user-attachments/assets/05eaeefc-3759-4fcc-8a5f-36c77780a82f)
+![Image](https://github.com/user-attachments/assets/c0a6f474-37f2-4ffb-8d9f-910eccbf287f) 
+![Image](https://github.com/user-attachments/assets/0347e39b-cae0-4bc1-aea5-7974f4f9eea9)
+![Image](https://github.com/user-attachments/assets/3d1a1c78-0cff-4b12-925f-3af0d18fb212)
+![Image](https://github.com/user-attachments/assets/b11b5ce2-9b79-4bec-b2e5-c2961a56adda)
